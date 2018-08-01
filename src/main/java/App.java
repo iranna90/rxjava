@@ -12,9 +12,12 @@ import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observables.ConnectableObservable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.TestSubscriber;
+import io.vertx.reactivex.core.Vertx;
+import io.vertx.reactivex.core.eventbus.Message;
 
 import static java.util.stream.Collectors.toList;
 
@@ -98,10 +101,83 @@ public class App {
     /* multipleObservableFromOne();*/
     /*multipleObservableFromOneShared();*/
 
-    errorHandling();
+    /*errorHandling();*/
+
+
+    /*checkObservableSendEventForMultipleSubscriber();*/
+
+    checkHowOperatorsApplied();
     System.out.println("completed blocking");
 
     Thread.sleep(2000);
+  }
+
+
+  private static void checkObservableSendEventForMultipleSubscriber() throws InterruptedException {
+    Vertx vertx = Vertx.vertx();
+
+    Single<String> consume = vertx.rxDeployVerticle("Consume");
+    System.out.println("consumer deployed " + consume.blockingGet());
+
+    Observable<Message<Object>> messageObservable =
+        vertx.eventBus().rxSend("check", "ping").toObservable().replay().autoConnect();
+    System.out.println("first subscriber deployed");
+    Disposable subscribe = messageObservable.map(rep -> {
+      System.out.println("first subscription got reply " + rep.body().toString());
+      return rep.body();
+    }).subscribe(
+        body -> System.out.println(body.toString()),
+        error -> error.printStackTrace()
+    );
+
+    System.out.println("before sleeping " + subscribe.isDisposed());
+    Thread.sleep(1000);
+    System.out.println("After sleeping " + subscribe.isDisposed());
+    System.out.println();
+    System.out.println("second subscriber deployed");
+    messageObservable.map(rep -> {
+      System.out.println("second subscription got reply " + rep.body().toString());
+      return rep.body();
+    }).subscribe(
+        body -> System.out.println(body.toString()),
+        error -> error.printStackTrace()
+    );
+
+
+
+  }
+
+  private static void checkHowOperatorsApplied() throws InterruptedException {
+    System.out.println("Observable Is a function which connects observer to producer");
+    System.out.println("Observable has producer which produces the events");
+    System.out.println("And the producer has reference to subscriber and calls the onNext for each value of the subscriber");
+    System.out.println("Before calling on next of each subscriber producer applies all the operators 'map, filter etc'");
+    System.out.println("1 : Each operator like 'filter', 'map' etc it takes a observable and returns a observable");
+    System.out.println(
+        "2 : At the end each observable has link to next observable and when we say subscribe our data type will have that link");
+    System.out.println(
+        "3: if we called filter().map() then in Observable.just(10,20)/arrayObservable has link to filterObservable which in turn has link to map observable 'array -> filter -> map -> then to subscriber onNext'");
+    System.out.println(
+        "4: Each operator 'filter' registers an observer on source stream and when we call 'map' after filter then it registers Observer for the filtered Observable that's how chaining works");
+
+
+    Observable.just(10, -1)
+        .filter(item -> {
+          System.out.println("Item ins filter " + item);
+          return item > 0;
+        })
+        .map(item -> {
+          System.out.println("Item is map " + item);
+          return item + 100;
+        })
+        .subscribe(
+            System.out::println,
+            Throwable::printStackTrace,
+            () -> System.out.println("complete"),
+            sub -> System.out.println("subscribed")
+        );
+
+    Thread.sleep(1000);
   }
 
   private static void errorHandling() {
@@ -118,7 +194,7 @@ public class App {
           return item;
         })
         .onErrorReturn(er -> 10)
-       // .onErrorReturnItem(100)
+        // .onErrorReturnItem(100)
         .subscribe(
             suc -> System.out.println(suc),
             error -> System.out.println(error.getMessage()),
