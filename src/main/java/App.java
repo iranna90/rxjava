@@ -83,7 +83,7 @@ public class App {
     //aggregator(Observable.just(1, 2, 3, 4, 5));
 
 
-    //   thenAllValuesAreBufferedAndReceived();
+    //thenAllValuesAreBufferedAndReceived();
 
     // whenDropStrategyUsed_thenOnBackpressureDropped();
 
@@ -93,18 +93,18 @@ public class App {
 
     // peekScan(Observable.just(new User("Iranna", 1), new User("Vishwa", 2)));
 
-    /*blockingObservableCreation();*/
+    // blockingObservableCreation();
 
 
-    /* nonBlockingObservableCreation();*/
+    // nonBlockingObservableCreation();
 
-    /* multipleObservableFromOne();*/
-    /*multipleObservableFromOneShared();*/
+    // multipleObservableFromOne();
+    // multipleObservableFromOneShared();
 
-    /*errorHandling();*/
+    // errorHandling();
 
 
-    /*checkObservableSendEventForMultipleSubscriber();*/
+    // checkObservableSendEventForMultipleSubscriber();
 
     checkHowOperatorsApplied();
     System.out.println("completed blocking");
@@ -161,6 +161,9 @@ public class App {
         "4: Each operator 'filter' registers an observer on source stream and when we call 'map' after filter then it registers Observer for the filtered Observable that's how chaining works");
 
 
+
+    System.out
+        .println("ECH OPERATOR ON OBSERVABLE IS A OBSERVER AND ALSO RETURNS A OBSERVABLE TO NEXT BELOW OPERATOR OR SUBSCRIBER");
     Observable.just(10, -1)
         .filter(item -> {
           System.out.println("Item ins filter " + item);
@@ -203,6 +206,7 @@ public class App {
   }
 
   private static void multipleObservableFromOne() throws InterruptedException {
+    System.out.println("OBSERVABLES ARE BY DEFAULT UNICAST");
     System.out.println(
         "As by default emiter/creator if observable will be called whenever user subscribes to it, So this creator will be called for every subscription");
     System.out.println(
@@ -214,9 +218,6 @@ public class App {
         emit.onNext(item);
       }));
     });
-
-    System.out.println(
-        "Observable will emit all the values before any subscriptions as the share needs to convert it into ConnectableObservables");
 
     Observable<Integer> lessThen40 = just
         .map(obj -> (Integer) obj)
@@ -389,6 +390,7 @@ public class App {
     Observable<Integer> delay = objectObservable
         .delay(10, TimeUnit.MILLISECONDS);
 
+    System.out.println("This is cold observable");
     System.out.println(
         "As the observable is created and wont be called until we subscribed, So above code should not run until we subscribe");
 
