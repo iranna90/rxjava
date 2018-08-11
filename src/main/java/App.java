@@ -106,7 +106,9 @@ public class App {
 
     // checkObservableSendEventForMultipleSubscriber();
 
-    checkHowOperatorsApplied();
+   /* checkHowOperatorsApplied();*/
+
+    checkObservable(Observable.just(10));
     System.out.println("completed blocking");
 
     Thread.sleep(2000);
@@ -145,6 +147,23 @@ public class App {
 
 
 
+  }
+
+  private static void checkObservable(final Observable<Integer> ob) {
+    ob
+        .map(item -> {
+          System.out.println("Item is " + item);
+          return item;
+        })
+        .flatMap(item -> provideNewOb())
+        .subscribe(
+            suc -> System.out.println("Returned should be true and value is " + suc)
+        );
+
+  }
+
+  private static Observable<Boolean> provideNewOb() {
+    return Observable.just(true);
   }
 
   private static void checkHowOperatorsApplied() throws InterruptedException {
