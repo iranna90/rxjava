@@ -1,3 +1,5 @@
+package examples;
+
 import io.reactivex.Maybe;
 import io.reactivex.ObservableOperator;
 import io.reactivex.Observer;
@@ -13,7 +15,7 @@ public class SwitchCase<T, R> implements ObservableOperator<R, T> {
     final Map<T, Function<T, R>> caseBlocks = new LinkedHashMap<>();
 
     /**
-     * create a {@link SwitchCase} operator, if any {@link Function} returned {@code null}, the
+     * create a {@link } operator, if any {@link Function} returned {@code null}, the
      * whole operation will crash
      *
      * @param caseBlocks the map that holds {@link Function} that are the case-blocks in this

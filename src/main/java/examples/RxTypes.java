@@ -1,3 +1,5 @@
+package examples;
+
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 

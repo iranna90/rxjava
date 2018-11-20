@@ -3,12 +3,17 @@ package vertx;
 import io.reactivex.Observable;
 import io.vertx.circuitbreaker.CircuitBreakerOptions;
 import io.vertx.core.Future;
+import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.circuitbreaker.CircuitBreaker;
 import io.vertx.reactivex.core.AbstractVerticle;
+import io.vertx.reactivex.core.MultiMap;
+import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.core.http.HttpServer;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.client.WebClient;
+
+import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
 
 public class HttpVerticle extends AbstractVerticle {
 
@@ -28,7 +33,24 @@ public class HttpVerticle extends AbstractVerticle {
     Router router = Router.router(vertx);
     router.get("/health/ready").handler(this::handleHealth);
     router.get("/health/alive").handler(rc -> rc.response().setStatusCode(200).end());
+    router.post("/data").consumes(APPLICATION_JSON).produces(APPLICATION_JSON).handler(this::handlePost);
     httpServer.requestHandler(router::accept).listen(1234);
+  }
+
+  private void handlePost(final RoutingContext rc) {
+    MultiMap headers = rc.request().headers();
+    headers.getDelegate().entries()
+        .forEach(entry -> System.out.println("key: " + entry.getKey() + " value: " + entry.getValue()));
+    rc.request().toObservable()
+        .map(Buffer::toJsonObject)
+        .map(json -> json.put("from", "vertx"))
+        .subscribe(
+            json -> rc.response().end(json.encodePrettily()),
+            error -> {
+              error.printStackTrace();
+              rc.response().setStatusCode(500).end(new JsonObject().put("errorMessage", error.getMessage()).encodePrettily());
+            }
+        );
   }
 
   private void handleHealth(final RoutingContext rc) {

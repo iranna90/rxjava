@@ -23,9 +23,12 @@ dependencies {
   compile group: 'io.vertx', name: 'vertx-core', version: '3.5.3'
   compile group: 'io.vertx', name: 'vertx-web', version: '3.5.3'
   compile group: 'io.vertx', name: 'vertx-web-client', version: '3.5.3'
+  compile group: 'io.vertx', name: 'vertx-unit', version: '3.5.3'
   compile 'io.vertx:vertx-circuit-breaker:3.5.3'
   // https://mvnrepository.com/artifact/io.vertx/vertx-rx-java2
   compile group: 'io.vertx', name: 'vertx-rx-java2', version: '3.5.3'
+  compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+
 
   // Use JUnit test framework
   testCompile 'junit:junit:4.12'

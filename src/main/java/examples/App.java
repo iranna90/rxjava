@@ -1,3 +1,5 @@
+package examples;
+
 import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -46,7 +48,7 @@ public class App {
         List<Integer> list = Arrays.asList(1, 2, 3, 4);
 
         Observable.fromIterable(list)
-                .lift(new SwitchCase<>(caseBlocks))
+                .lift(new examples.SwitchCase<>(caseBlocks))
                 .subscribe(System.out::println);*/
 
     // zipping is a process get element from both instances
@@ -108,17 +110,29 @@ public class App {
 
    /* checkHowOperatorsApplied();*/
 
-    checkObservable(Observable.just(10));
+    /*checkObservable(Observable.just(10));*/
+
+    testObservable();
     System.out.println("completed blocking");
 
     Thread.sleep(2000);
   }
 
 
+  private static void testObservable(){
+    Observable<Integer> just = Observable.just(100);
+    Observable<Integer> map = just
+        .map(item -> {
+          System.out.println(item);
+          return item;
+        });
+
+    map.subscribe(System.out::println);
+  }
   private static void checkObservableSendEventForMultipleSubscriber() throws InterruptedException {
     Vertx vertx = Vertx.vertx();
 
-    Single<String> consume = vertx.rxDeployVerticle("Consume");
+    Single<String> consume = vertx.rxDeployVerticle("examples.Consume");
     System.out.println("consumer deployed " + consume.blockingGet());
 
     Observable<Message<Object>> messageObservable =

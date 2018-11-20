@@ -1,3 +1,5 @@
+package examples;
+
 import io.vertx.reactivex.core.AbstractVerticle;
 
 public class Consume extends AbstractVerticle {

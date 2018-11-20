@@ -1,3 +1,5 @@
+package examples;
+
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOperator;
