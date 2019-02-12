@@ -6,7 +6,7 @@ public class MainDeploy {
 
   public static void main(String[] args) {
     Vertx vertx = Vertx.vertx();
-    vertx.deployVerticle("vertx.callback.HttpVert");
-    vertx.deployVerticle("vertx.callback.MessageVert");
+    vertx.deployVerticle(HttpVert.class.getName());
+    vertx.deployVerticle(MessageVert.class.getName());
   }
 }

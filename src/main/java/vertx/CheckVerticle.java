@@ -6,8 +6,14 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.reactivex.core.Vertx;
 
 public class CheckVerticle extends AbstractVerticle {
+
+  public static void main(String[] args) {
+    Vertx.vertx().deployVerticle(CheckVerticle.class.getName());
+  }
+
   @Override
   public void start() throws Exception {
 
