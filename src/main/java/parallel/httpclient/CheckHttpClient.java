@@ -27,8 +27,8 @@ public class CheckHttpClient extends AbstractVerticle {
 
   @Override
   public void start(final Future<Void> startFuture) throws Exception {
-    webClient = WebClient.create(vertx, new WebClientOptions().setMaxPoolSize(10));
-    Observable.interval(10, TimeUnit.SECONDS)
+    webClient = WebClient.create(vertx, new WebClientOptions().setMaxPoolSize(1));
+    Observable.interval(0, 30, TimeUnit.SECONDS)
         .doOnNext(it -> System.out.println(System.lineSeparator() + System.lineSeparator()))
         .flatMap(it -> Observable.fromIterable(URLS))
         .doOnNext(item -> System.out.println("Performing for url " + item + " at " + LocalTime.now()))

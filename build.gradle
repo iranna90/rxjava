@@ -28,7 +28,7 @@ dependencies {
   // https://mvnrepository.com/artifact/io.vertx/vertx-rx-java2
   compile group: 'io.vertx', name: 'vertx-rx-java2', version: '3.5.3'
   compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
-
+  compile group: 'io.vertx', name: 'vertx-consul-client', version: '3.5.3'
 
   // Use JUnit test framework
   testCompile 'junit:junit:4.12'
