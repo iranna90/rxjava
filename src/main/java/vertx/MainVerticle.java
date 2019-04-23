@@ -4,6 +4,8 @@ import io.vertx.core.Future;
 import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.reactivex.core.Vertx;
 
+import java.util.concurrent.TimeUnit;
+
 public class MainVerticle extends AbstractVerticle {
   @Override
   public void start(final Future<Void> startFuture) throws Exception {
@@ -21,9 +23,14 @@ public class MainVerticle extends AbstractVerticle {
         );
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InterruptedException {
     Vertx vertx = Vertx.vertx();
     vertx.deployVerticle("vertx.MainVerticle");
     System.out.println("deployed");
+
+    while (true) {
+        TimeUnit.MILLISECONDS.sleep(100);
+        System.out.println("Running");
+    }
   }
 }
